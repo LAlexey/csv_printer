@@ -1,6 +1,4 @@
 class Parser::Row
-  include Enumerable
-
   attr_reader :line
 
   def initialize(cells, line)
@@ -12,6 +10,10 @@ class Parser::Row
     @cells.each(&block)
   end
 
+  def map_cells(&block)
+    @cells.map(&block)
+  end
+
   def size
     @cells.map(&:column_width).sum
   end
@@ -20,7 +22,7 @@ class Parser::Row
     @cells.count
   end
 
-  def height
-    @height ||= @cells.max_by(&:internal_rows_size).internal_rows_size
+  def internal_height
+    @internal_height ||= @cells.max_by(&:internal_rows_size).internal_rows_size
   end
 end

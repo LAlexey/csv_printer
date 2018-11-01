@@ -40,3 +40,4 @@ end
 require_relative 'column'
 require_relative 'row'
 require_relative 'cell'
+require_relative 'raw_to_formatted_cell_converter'

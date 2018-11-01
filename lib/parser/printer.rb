@@ -17,36 +17,31 @@ class Parser::Printer
   private
 
   def render_row(row)
-    puts "#{ANGLE_SYM}#{ROW_SYM*(row.size + @table.columns.count - 1)}#{ANGLE_SYM}" if first_row?
+    puts header(row.size) if first_row?
 
-    row_string = ""
-    row.height.times do
-      row_string << BORDER_SYM
+    row.internal_height.times { puts(build_internal_row(row)) }
 
-      row.each_cell do |cell|
-        row_string << "#{render_cell(cell)}#{BORDER_SYM}"
-      end
-
-      puts row_string
-      row_string = ""
-    end
-
-    puts "|#{@table.columns.map(&:width).map { |col_width| '-'*col_width }.join(ANGLE_SYM)}|" if last_row?
+    puts footer if last_row?
 
     @row_index += 1
   end
 
-  def render_cell(cell)
-    cell_string = ''
+  def build_internal_row(row)
+    built_cells = row.map_cells(&method(:build_cell)).join(BORDER_SYM)
+    "#{BORDER_SYM}#{built_cells}#{BORDER_SYM}"
+  end
+
+  def build_cell(cell)
     current_content = cell.content.shift
-    if current_content
-      if cell.right_aligned?
-        cell_string << (' '*(cell.column_width - current_content.size) + current_content)
-      else
-        cell_string << (current_content + ' '*(cell.column_width - current_content.size))
-      end
+    return ' ' * cell.column_width unless current_content
+
+    align_size = cell.column_width - current_content.size
+    space_alignment = ' ' * align_size
+
+    if cell.right_aligned?
+      "#{space_alignment}#{current_content}"
     else
-      cell_string << (' '*cell.column_width)
+      "#{current_content}#{space_alignment}"
     end
   end
 
@@ -56,5 +51,13 @@ class Parser::Printer
 
   def last_row?
     @row_index == @table.rows_count - 1
+  end
+
+  def header(row_size)
+    "#{ANGLE_SYM}#{ROW_SYM*(row_size + @table.columns.count - 1)}#{ANGLE_SYM}"
+  end
+
+  def footer
+    "|#{@table.columns.map(&:width).map { |col_width| '-'*col_width }.join(ANGLE_SYM)}|"
   end
 end
