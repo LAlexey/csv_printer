@@ -21,7 +21,7 @@ class Parser::Printer
 
     row.internal_height.times { puts(build_internal_row(row)) }
 
-    puts footer if last_row?
+    puts rows_delimiter
 
     @row_index += 1
   end
@@ -49,15 +49,11 @@ class Parser::Printer
     @row_index.zero?
   end
 
-  def last_row?
-    @row_index == @table.rows_count - 1
-  end
-
   def header(row_size)
     "#{ANGLE_SYM}#{ROW_SYM*(row_size + @table.columns.count - 1)}#{ANGLE_SYM}"
   end
 
-  def footer
+  def rows_delimiter
     columns_footer = @table.columns.map(&:width).map { |col_width| '-'*col_width }.join(ANGLE_SYM)
     "#{ANGLE_SYM}#{columns_footer}#{ANGLE_SYM}"
   end
