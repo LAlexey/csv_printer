@@ -1,11 +1,3 @@
-require 'rubygems/package'
-require 'bundler/inline'
-
-gemfile do
-  source 'https://rubygems.org'
-  gem 'pry-byebug'
-end
-
 require 'csv'
 require_relative 'parser/table'
 require_relative 'parser/printer'
