@@ -10,7 +10,7 @@ class Parser
     end
 
     def content
-      @content ||= [*RawToFormattedCellConverter.new(@raw_content, @column.type).convert]
+      @content ||= [*converter.convert]
     end
 
     def increase_column_width_if_needed
@@ -22,11 +22,17 @@ class Parser
     end
 
     def internal_rows_size
-      @internal_rows_size ||= content.is_a?(Array) ? content.size : 1
+      @internal_rows_size ||= content.size
     end
 
     def column_size
-      @column_size ||= content.is_a?(Array) ? content.max_by(&:size).size : content.size
+      @column_size ||= content.max_by(&:size).size
+    end
+
+    private
+
+    def converter
+      @converter ||= RawToFormattedCellConverter.new(@raw_content, @column.type)
     end
   end
 end
