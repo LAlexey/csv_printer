@@ -58,6 +58,7 @@ class Parser::Printer
   end
 
   def footer
-    "|#{@table.columns.map(&:width).map { |col_width| '-'*col_width }.join(ANGLE_SYM)}|"
+    columns_footer = @table.columns.map(&:width).map { |col_width| '-'*col_width }.join(ANGLE_SYM)
+    "#{ANGLE_SYM}#{columns_footer}#{ANGLE_SYM}"
   end
 end
